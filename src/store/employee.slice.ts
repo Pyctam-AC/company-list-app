@@ -13,14 +13,14 @@ interface Employee {
 
 interface EmployeeState {
   employees: Employee[];
-  selectedEmployeeIds: number[];
+  selectedEmployeeIds: number | null;
   isSelected: boolean;
   isEditing: boolean;
 }
 
 const initialState: EmployeeState = {
   employees: [],
-  selectedEmployeeIds: [],
+  selectedEmployeeIds: null,
   isSelected: false,
   isEditing: false,
 };
@@ -34,14 +34,11 @@ const employeeSlice = createSlice({
     },
     toggleEmployeeSelection: (state, action: PayloadAction<number>) => {
       const employeeId = action.payload;
-      const selectedEmployee = state.employees.find((employee) => employee.id === employeeId);
-      if (selectedEmployee) {
-        state.isSelected = true;
-        if (state.isSelected) {
-          state.selectedEmployeeIds.push(employeeId);
-        } else {
-          state.selectedEmployeeIds = state.selectedEmployeeIds.filter((id) => id !== employeeId);
-        }
+
+      if (state.selectedEmployeeIds === employeeId) {
+        state.selectedEmployeeIds = null;
+      } else {
+        state.selectedEmployeeIds = employeeId;
       }
     },
     deleteSelectedEmployees: (state, action: PayloadAction<number>) => {

@@ -22,7 +22,7 @@ import { RootState } from '../store';
 const CompanyTable: FC = () => {
   const dispatch = useDispatch();
 
-  const { isSelected, isEditing } = useSelector((state: RootState) => state.company);
+  const { selectedCompanyIds, /* isSelected, */ isEditing } = useSelector((state: RootState) => state.company);
 
   const [companiesRow, setCompanies] = useState<Company[]>([]);
 
@@ -80,7 +80,8 @@ const CompanyTable: FC = () => {
       employees: company.employees,
       address: company.address,
     },
-    isSelected,
+    isSelected: selectedCompanyIds === company.id,
+    selected: selectedCompanyIds === company.id,
     isEditing,
   }));
 

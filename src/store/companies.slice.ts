@@ -18,14 +18,14 @@ export interface Company {
 
 interface CompanyState {
   companies: Company[];
-  selectedCompanyIds: number[];
+  selectedCompanyIds: number | null;
   isSelected: boolean;
   isEditing: boolean;
 }
 
 const initialState: CompanyState = {
   companies: [],
-  selectedCompanyIds: [],
+  selectedCompanyIds: null,
   isSelected: false,
   isEditing: false,
 };
@@ -39,15 +39,10 @@ const companiesSlice = createSlice ({
     },
     toggleCompanySelection: (state, action: PayloadAction<number>) => {
       const companyId = action.payload;
-      const selectedCompany = state.companies.find((company) => company.id === companyId);
-
-      if (selectedCompany) {
-        state.isSelected = true;
-        if (state.isSelected) {
-          state.selectedCompanyIds.push(companyId);
-        } else {
-          state.selectedCompanyIds = state.selectedCompanyIds.filter((id) => id !== companyId);
-        }
+      if (state.selectedCompanyIds === companyId) {
+        state.selectedCompanyIds = null;
+      } else {
+        state.selectedCompanyIds = companyId;
       }
     },
     deleteSelectedCompanies: (state, action: PayloadAction<number>) => {

@@ -11,6 +11,7 @@ interface TableColumn {
 interface TableRow {
   id: number;
   isSelected: boolean;
+  selected:  boolean;
   isEditing?: boolean;
   data: Record<string, any>;
 }

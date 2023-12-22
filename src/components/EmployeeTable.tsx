@@ -16,12 +16,12 @@ import { Employee } from '../store/companies.slice';
 
 const EmployeeTable: FC = () => {
   const dispatch = useDispatch();
-  const {employees, isSelected, isEditing,} = useSelector((state: RootState) => state.employee);
+  const {selectedEmployeeIds, employees, /* isSelected, */ isEditing,} = useSelector((state: RootState) => state.employee);
 
   const [employeeList, setEmployeeList] = useState <Employee[]>([])
 
   useEffect (()=> {
-    setEmployeeList(employees)
+    setEmployeeList(employees);
   }, [employees])
 
   const handleToggleEmployeeSelection = useCallback((employeeId: number) => {
@@ -49,9 +49,9 @@ const EmployeeTable: FC = () => {
   }, [dispatch]);
 
   const columns = [
-    { label: 'Last Name', key: 'lastName', editable: true },
-    { label: 'First Name', key: 'firstName', editable: true },
-    { label: 'Position', key: 'position', editable: true },
+    { label: 'Фамилия', key: 'lastName', editable: true },
+    { label: 'Имя', key: 'firstName', editable: true },
+    { label: 'Должность', key: 'position', editable: true },
   ];
 
   const rows = employeeList.map((employee) => ({
@@ -61,7 +61,8 @@ const EmployeeTable: FC = () => {
       firstName: employee.firstName,
       position: employee.position,
     },
-    isSelected,
+    isSelected: selectedEmployeeIds === employee.id,
+    selected: selectedEmployeeIds === employee.id,
     isEditing,
   }));
 
