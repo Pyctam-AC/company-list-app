@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // CompanyTable.tsx
 import { FC, useEffect, useState, useCallback } from 'react';
@@ -12,16 +13,37 @@ import {
   cancelEditCompany,
   addNewCompany,
   Company,
+  Employee
 } from '../store/companies.slice';
-import { getCompanys } from '../utils/api';
+import { addEmployee } from '../store/employee.slice';
+import { getCompanys, getEmployeesByCompanyId } from '../utils/api';
 import { RootState } from '../store';
 
 const CompanyTable: FC = () => {
   const dispatch = useDispatch();
 
+  const { isSelected, isEditing } = useSelector((state: RootState) => state.company);
+
+  const [companiesRow, setCompanies] = useState<Company[]>([]);
+
+  useEffect(() => {
+    getCompanys().then((companies: Company[]) => {
+      setCompanies(companies);
+      dispatch(addCompanies(companies));
+    });
+  }, [dispatch]);
+
+  const fetchEmployees = (companyId: number) => {
+    getEmployeesByCompanyId(companyId)
+      .then((employees: Employee[]) => {
+        dispatch(addEmployee(employees))
+      })
+  }
+
   const handleToggleCompanySelection = useCallback((companyId: number) => {
     dispatch(toggleCompanySelection(companyId));
-  }, [dispatch]);
+    fetchEmployees(companyId)
+  }, [dispatch, fetchEmployees]);
 
   const handleDeleteSelectedCompanies = useCallback((companyId: number) => {
     dispatch(deleteSelectedCompanies(companyId));
@@ -43,21 +65,12 @@ const CompanyTable: FC = () => {
     dispatch(addNewCompany());
   }, [dispatch]);
 
-  const { isSelected, isEditing } = useSelector((state: RootState) => state.company);
 
-  const [companiesRow, setCompanies] = useState<Company[]>([]);
-
-  useEffect(() => {
-    getCompanys().then((companies: Company[]) => {
-      setCompanies(companies);
-      dispatch(addCompanies(companies));
-    });
-  }, [dispatch]);
 
   const columns = [
-    { label: 'Name', key: 'name', editable: true },
-    { label: 'Number of Employees', key: 'employees.length' },
-    { label: 'Address', key: 'address', editable: true },
+    { label: 'Название', key: 'name', editable: true },
+    { label: 'Количесвто сотрудников', key: 'employees.length' },
+    { label: 'Адрес', key: 'address', editable: true },
   ];
 
   const rows = companiesRow.map((company) => ({

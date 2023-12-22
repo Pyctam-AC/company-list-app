@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from './index';
 
-interface Employee {
+export interface Employee {
   id: number;
   companyId: number;
   firstName: string;

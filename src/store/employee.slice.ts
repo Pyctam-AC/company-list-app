@@ -29,6 +29,9 @@ const employeeSlice = createSlice({
   name: 'employee',
   initialState,
   reducers: {
+    addEmployee: (state, action: PayloadAction<Employee[]>) => {
+      state.employees.push(...action.payload)
+    },
     toggleEmployeeSelection: (state, action: PayloadAction<number>) => {
       const employeeId = action.payload;
       const selectedEmployee = state.employees.find((employee) => employee.id === employeeId);
@@ -70,7 +73,7 @@ const employeeSlice = createSlice({
         state.isEditing = false;
       }
     },
-    addEmployee: (state ) => {
+    addNewEmployee: (state ) => {
       const newEmployeeId = state.employees.length + 1;
       const newEmployee: Employee = {
         id: newEmployeeId,
@@ -92,6 +95,7 @@ export const {
   saveEmployee,
   cancelEditEmployee,
   addEmployee,
+  addNewEmployee,
 } = employeeSlice.actions;
 export const selectEmployees = (state: RootState) => state.employee.employees;
 export const selectSelectedEmployeeIds = (state: RootState) => state.employee.selectedEmployeeIds;

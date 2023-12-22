@@ -1,21 +1,28 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // EmployeeTable.tsx
-import { FC, useCallback } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Table from './Table';
 import {
-  selectEmployees,
   toggleEmployeeSelection,
   deleteSelectedEmployees,
   editEmployee,
   saveEmployee,
   cancelEditEmployee,
-  addEmployee,
+  addNewEmployee,
 } from '../store/employee.slice';
+import { RootState } from '../store';
+import { Employee } from '../store/companies.slice';
 
 const EmployeeTable: FC = () => {
   const dispatch = useDispatch();
-  const employees = useSelector(selectEmployees);
+  const {employees, isSelected, isEditing,} = useSelector((state: RootState) => state.employee);
+
+  const [employeeList, setEmployeeList] = useState <Employee[]>([])
+
+  useEffect (()=> {
+    setEmployeeList(employees)
+  }, [employees])
 
   const handleToggleEmployeeSelection = useCallback((employeeId: number) => {
     dispatch(toggleEmployeeSelection(employeeId));
@@ -38,7 +45,7 @@ const EmployeeTable: FC = () => {
   }, [dispatch]);
 
   const handleAddEmployee = useCallback(() => {
-    dispatch(addEmployee());
+    dispatch(addNewEmployee());
   }, [dispatch]);
 
   const columns = [
@@ -47,7 +54,7 @@ const EmployeeTable: FC = () => {
     { label: 'Position', key: 'position', editable: true },
   ];
 
-  const rows = employees.map((employee) => ({
+  const rows = employeeList.map((employee) => ({
     id: employee.id,
     data: {
       lastName: employee.lastName,
