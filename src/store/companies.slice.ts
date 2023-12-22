@@ -1,11 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from './index';
 
+interface Employee {
+  id: number;
+  companyId: number;
+  firstName: string;
+  lastName: string;
+  position: string;
+}
 
 export interface Company {
   id: number;
   name: string;
-  employees: number;
+  employees: Employee[];
   address: string;
 }
 
@@ -77,7 +84,7 @@ const companiesSlice = createSlice ({
       const newCompany: Company = {
         id: newCompanyId,
         name: 'название',
-        employees: 0,
+        employees: [],
         address: 'адрес',
       };
       state.companies.push(newCompany);
